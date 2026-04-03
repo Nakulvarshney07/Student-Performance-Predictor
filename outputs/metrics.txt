@@ -1,0 +1,157 @@
+======================================================================
+ROOT NODE SELECTION — Mathematical Demonstration
+======================================================================
+
+Dataset size: 1044
+Pass count: 814, Fail count: 230
+
+Parent Entropy H(S) = 0.760727
+
+Formula: H(S) = -Σ p_i * log2(p_i)
+  p(Pass) = 0.7797
+  p(Fail) = 0.2203
+  H(S) = -(0.7797 * log2(0.7797)) - (0.2203 * log2(0.2203))
+  H(S) = 0.760727
+
+Feature              Info Gain       Split Info      Gain Ratio     
+-----------------------------------------------------------------
+failures             0.088942        0.892718        0.099631       
+higher               0.028797        0.420410        0.068497       
+school               0.011946        0.827555        0.014436       
+absences             0.044449        3.220380        0.013802       
+age                  0.018988        2.270703        0.008362       
+Fedu                 0.014794        2.038210        0.007258       
+goout                0.014378        2.179508        0.006597       
+Medu                 0.012437        2.035790        0.006109       
+guardian             0.006778        1.120568        0.006049       
+Dalc                 0.008039        1.341010        0.005995       
+
+>>> Best feature for root node (highest Gain Ratio): failures
+    Gain Ratio = 0.099631
+======================================================================
+
+============================================================
+EVALUATION RESULTS — Custom C4.5 Decision Tree
+============================================================
+
+  Accuracy:  0.7273  (72.73%)
+  Precision: 0.6982
+  Recall:    0.7273
+  F1-Score:  0.7101
+
+  Confusion Matrix:
+                Predicted Fail  Predicted Pass
+  Actual Fail           11               35
+  Actual Pass           22              141
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+        Fail       0.33      0.24      0.28        46
+        Pass       0.80      0.87      0.83       163
+
+    accuracy                           0.73       209
+   macro avg       0.57      0.55      0.56       209
+weighted avg       0.70      0.73      0.71       209
+
+============================================================
+
+
+============================================================
+Feature Importance — Custom C4.5 Tree
+============================================================
+Rank   Feature                   Importance     
+--------------------------------------------------
+1      failures                  0.192664        ███████
+2      guardian                  0.085881        ███
+3      absences                  0.081321        ███
+4      higher                    0.078386        ███
+5      school                    0.065982        ██
+6      schoolsup                 0.064921        ██
+7      Pstatus                   0.044844        █
+8      activities                0.041353        █
+9      romantic                  0.036250        █
+10     paid                      0.027903        █
+11     Fedu                      0.026966        █
+12     Dalc                      0.022409        
+13     famsize                   0.022171        
+14     health                    0.020140        
+15     age                       0.019829        
+16     famsup                    0.019667        
+17     Walc                      0.019042        
+18     internet                  0.018165        
+19     Medu                      0.018032        
+20     Mjob                      0.017366        
+21     address                   0.015744        
+22     sex                       0.015312        
+23     studytime                 0.015207        
+24     nursery                   0.014395        
+25     goout                     0.005658        
+26     famrel                    0.005294        
+27     Fjob                      0.005096        
+28     reason                    0.000000        
+29     traveltime                0.000000        
+30     freetime                  0.000000        
+
+============================================================
+EVALUATION RESULTS — sklearn DecisionTreeClassifier
+============================================================
+
+  Accuracy:  0.7416  (74.16%)
+  Precision: 0.7034
+  Recall:    0.7416
+  F1-Score:  0.7170
+
+  Confusion Matrix:
+                Predicted Fail  Predicted Pass
+  Actual Fail           10               36
+  Actual Pass           18              145
+
+  Classification Report:
+              precision    recall  f1-score   support
+
+        Fail       0.36      0.22      0.27        46
+        Pass       0.80      0.89      0.84       163
+
+    accuracy                           0.74       209
+   macro avg       0.58      0.55      0.56       209
+weighted avg       0.70      0.74      0.72       209
+
+============================================================
+
+
+============================================================
+Feature Importance — sklearn DecisionTree
+============================================================
+Rank   Feature                   Importance     
+--------------------------------------------------
+1      failures                  0.249460        █████████
+2      absences                  0.088475        ███
+3      freetime                  0.058225        ██
+4      health                    0.056130        ██
+5      guardian                  0.054324        ██
+6      higher                    0.051713        ██
+7      goout                     0.047565        █
+8      studytime                 0.045278        █
+9      traveltime                0.040421        █
+10     Mjob                      0.038577        █
+11     schoolsup                 0.035556        █
+12     Dalc                      0.032577        █
+13     paid                      0.032466        █
+14     age                       0.029535        █
+15     nursery                   0.029181        █
+16     Fedu                      0.022077        
+17     Walc                      0.019707        
+18     reason                    0.015106        
+19     Medu                      0.014060        
+20     Fjob                      0.013552        
+21     school                    0.011361        
+22     address                   0.008270        
+23     romantic                  0.006384        
+24     sex                       0.000000        
+25     famsize                   0.000000        
+26     Pstatus                   0.000000        
+27     famsup                    0.000000        
+28     activities                0.000000        
+29     internet                  0.000000        
+30     famrel                    0.000000        
