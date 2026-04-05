@@ -1,30 +1,9 @@
-"""
-decision_tree.py
-================
-Custom Decision Tree implementation using the C4.5 algorithm
-(Gain Ratio as splitting criterion).
-
-Features:
-    - Builds a tree recursively using gain ratio
-    - Handles both categorical and numerical features
-    - Supports max_depth and min_samples_split stopping criteria
-    - Provides a text-based tree representation
-
-For comparison, we also wrap sklearn's DecisionTreeClassifier to enable
-proper visualization via plot_tree.
-"""
-
 import numpy as np
 import pandas as pd
 from src.entropy import entropy, gain_ratio
 
 
-# ──────────────────────────────────────────────
-# Custom C4.5 Decision Tree (from scratch)
-# ──────────────────────────────────────────────
-
 class TreeNode:
-    """Represents a node in the decision tree."""
 
     def __init__(
         self,
@@ -36,42 +15,26 @@ class TreeNode:
         info_gain=0.0,
         gain_ratio_val=0.0,
     ):
-        self.feature = feature            # Feature name used for split
-        self.threshold = threshold        # Threshold for numeric split
-        self.children = children or {}    # {value: TreeNode} for categorical
-        self.label = label                # Class label (for leaf nodes)
+        self.feature = feature
+        self.threshold = threshold
+        self.children = children or {}
+        self.label = label
         self.is_leaf = is_leaf
         self.info_gain = info_gain
         self.gain_ratio_val = gain_ratio_val
 
 
 class DecisionTreeC45:
-    """
-    C4.5 Decision Tree Classifier built from scratch.
-
-    Uses Gain Ratio for splitting to avoid bias toward
-    high-cardinality features.
-    """
 
     def __init__(self, max_depth: int = 10, min_samples_split: int = 5):
-        """
-        Parameters
-        ----------
-        max_depth : int
-            Maximum depth of the tree.
-        min_samples_split : int
-            Minimum samples required to split a node.
-        """
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.tree = None
         self.feature_importances_ = {}
 
     def fit(self, X: pd.DataFrame, y: pd.Series) -> "DecisionTreeC45":
-        """Build the decision tree."""
         self.feature_importances_ = {col: 0.0 for col in X.columns}
         self.tree = self._build_tree(X, y, depth=0)
-        # Normalize feature importances
         total = sum(self.feature_importances_.values())
         if total > 0:
             self.feature_importances_ = {
@@ -80,15 +43,12 @@ class DecisionTreeC45:
         return self
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
-        """Predict class labels for samples in X."""
         return np.array([self._predict_row(row, self.tree) for _, row in X.iterrows()])
 
     def _build_tree(self, X: pd.DataFrame, y: pd.Series, depth: int) -> TreeNode:
-        """Recursively build the tree."""
         n_samples = len(y)
         n_classes = y.nunique()
 
-        # ── Stopping conditions ──
         if n_classes == 1:
             return TreeNode(label=y.iloc[0], is_leaf=True)
 
@@ -96,7 +56,6 @@ class DecisionTreeC45:
             majority = y.mode()[0]
             return TreeNode(label=majority, is_leaf=True)
 
-        # ── Find best split (highest gain ratio) ──
         best_feature = None
         best_gr = -1
 
@@ -110,10 +69,8 @@ class DecisionTreeC45:
             majority = y.mode()[0]
             return TreeNode(label=majority, is_leaf=True)
 
-        # Track feature importance
         self.feature_importances_[best_feature] += best_gr * n_samples
 
-        # ── Split on best feature ──
         node = TreeNode(
             feature=best_feature,
             gain_ratio_val=best_gr,
@@ -136,7 +93,6 @@ class DecisionTreeC45:
         return node
 
     def _predict_row(self, row: pd.Series, node: TreeNode):
-        """Predict a single sample by traversing the tree."""
         if node.is_leaf:
             return node.label
 
@@ -145,17 +101,15 @@ class DecisionTreeC45:
         if feature_val in node.children:
             return self._predict_row(row, node.children[feature_val])
         else:
-            # Unseen value — return most common child label
             child_labels = []
             for child in node.children.values():
                 if child.is_leaf:
                     child_labels.append(child.label)
             if child_labels:
                 return max(set(child_labels), key=child_labels.count)
-            return 1  # default to Pass
+            return 1
 
     def print_tree(self, node=None, indent="", file=None):
-        """Print a text representation of the tree."""
         if node is None:
             node = self.tree
 
@@ -175,7 +129,6 @@ class DecisionTreeC45:
 
 
 if __name__ == "__main__":
-    # Quick test with a small dataset
     data = {
         "Outlook": [0, 0, 1, 2, 2, 2, 1, 0, 0, 2, 0, 1, 1, 2],
         "Temp": [2, 2, 2, 1, 0, 0, 0, 1, 0, 1, 1, 1, 2, 1],
